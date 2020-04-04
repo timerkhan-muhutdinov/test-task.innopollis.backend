@@ -2,15 +2,14 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Warehouses.Contracts;
-using Warehouses.DataAccess;
 using Warehouses.Domain.Entities;
 using Warehouses.IntegrationTests.Extensions;
+using Warehouses.IntegrationTests.Dtos;
 
 namespace Warehouses.IntegrationTests
 {
@@ -52,7 +51,7 @@ namespace Warehouses.IntegrationTests
         {
             var responseWarehouse = await TestClient.GetAsync($"{ApiRoutes.Warehouses.GetAll}?$top=1");
             var jsonAsString = await responseWarehouse.Content.ReadAsStringAsync();
-            var warehouses = JsonConvert.DeserializeObject<ODataResponse<Warehouse>>(jsonAsString);
+            var warehouses = JsonConvert.DeserializeObject<ODataResponseDto<Warehouse>>(jsonAsString);
 
             return warehouses.Value.FirstOrDefault();
         }
@@ -64,9 +63,5 @@ namespace Warehouses.IntegrationTests
 
             return JsonConvert.DeserializeObject<Warehouse>(jsonAsString);
         }
-    }
-    internal class ODataResponse<T>
-    {
-        public List<T> Value { get; set; }
     }
 }

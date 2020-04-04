@@ -15,7 +15,7 @@ namespace Warehouses.Domain.Entities
         /// <summary>
         /// Артикуль товара
         /// </summary>
-        public string Article { get; set; }
+        public string VendorCode { get; set; }
 
         /// <summary>
         /// Имя товара

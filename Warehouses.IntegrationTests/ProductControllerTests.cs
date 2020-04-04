@@ -30,7 +30,7 @@ namespace Warehouses.IntegrationTests
         {
             var product = new Product
             {
-                Article = (new Random()).Next(1, 10000000).ToString(),
+                VendorCode = (new Random()).Next(1, 10000000).ToString(),
                 Name = "Баклажан",
                 Description = "Баклажан натуральный",
                 Price = 20,
@@ -55,7 +55,7 @@ namespace Warehouses.IntegrationTests
         {
             var product = new Product
             {
-                Article = (new Random()).Next(1, 10000000).ToString(),
+                VendorCode = (new Random()).Next(1, 10000000).ToString(),
                 Name = "Баклажан",
                 Description = "Баклажан натуральный",
                 Price = 20,
@@ -84,7 +84,7 @@ namespace Warehouses.IntegrationTests
         {
             var product = new Product
             {
-                Article = (new Random()).Next(1, 10000000).ToString(),
+                VendorCode = (new Random()).Next(1, 10000000).ToString(),
                 Name = "Доширак",
                 Description = "еда богов",
                 Price = 20,
@@ -96,7 +96,7 @@ namespace Warehouses.IntegrationTests
             createdProduct.Should().NotBeNull();
 
             createdProduct.Name = "BigBon";
-            createdProduct.Article = (new Random()).Next(1, 10000000).ToString();
+            createdProduct.VendorCode = (new Random()).Next(1, 10000000).ToString();
             createdProduct.Warehouses = new List<WarehouseProduct>();
 
             var updatedContent = new StringContent(createdProduct.ToJsonString(), Encoding.UTF8, "application/json");
@@ -109,7 +109,7 @@ namespace Warehouses.IntegrationTests
 
             var returnedPost = JsonConvert.DeserializeObject<Product>(jsonAsString);
             returnedPost.Name.Should().BeEquivalentTo("BigBon");
-            returnedPost.Article.Should().BeEquivalentTo(createdProduct.Article);
+            returnedPost.VendorCode.Should().BeEquivalentTo(createdProduct.VendorCode);
 
             // Проверка на передачу null
             response = await TestClient.PutAsync(ApiRoutes.Products.Update.Replace("{productId}", createdProduct.Id.ToString()), null);
@@ -117,9 +117,9 @@ namespace Warehouses.IntegrationTests
 
             // Проверка на не существование товара
             createdProduct.Id = Guid.NewGuid();
-            response = await TestClient.PutAsync(ApiRoutes.Products.Update.Replace("{productId}", createdProduct.Id.ToString()), new StringContent(createdProduct.ToJsonString(), Encoding.UTF8, "application/json"));
+            response = await TestClient.PutAsync(ApiRoutes.Products.Update.Replace("{productId}", createdProduct.Id.ToString()),
+                                                        new StringContent(createdProduct.ToJsonString(), Encoding.UTF8, "application/json"));
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-
         }
     }
 }

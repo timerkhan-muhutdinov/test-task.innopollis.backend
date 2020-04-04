@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Warehouses.Contracts;
 using Warehouses.Domain.Entities;
@@ -50,7 +49,7 @@ namespace Warehouses.IntegrationTests
         {
             var product = new Product
             {
-                Article = (new Random()).Next(1, 10000000).ToString(),
+                VendorCode = (new Random()).Next(1, 10000000).ToString(),
                 Name = "Баклажан",
                 Description = "Баклажан натуральный",
                 Price = 20,
@@ -90,7 +89,7 @@ namespace Warehouses.IntegrationTests
         {
             var product = new Product
             {
-                Article = (new Random()).Next(1, 10000000).ToString(),
+                VendorCode = (new Random()).Next(1, 10000000).ToString(),
                 Name = "Баклажан",
                 Description = "Баклажан натуральный",
                 Price = 20,
@@ -135,7 +134,7 @@ namespace Warehouses.IntegrationTests
         {
             var product = new Product
             {
-                Article = (new Random()).Next(1, 10000000).ToString(),
+                VendorCode = (new Random()).Next(1, 10000000).ToString(),
                 Name = "Баклажан",
                 Description = "Баклажан натуральный",
                 Price = 20,
@@ -154,23 +153,20 @@ namespace Warehouses.IntegrationTests
             };
 
             //Добавляем товар на склад
-            await TestClient.PostAsync(
-                                                        ApiRoutes.Warehouses.AddProduct
-                                                                                .Replace("{warehouseId}", warehouse.Id.ToString())
-                                                                                .Replace("{productId}", createdProduct.Id.ToString()),
+            await TestClient.PostAsync(ApiRoutes.Warehouses.AddProduct
+                                                                .Replace("{warehouseId}", warehouse.Id.ToString())
+                                                                .Replace("{productId}", createdProduct.Id.ToString()),
                                                         new FormUrlEncodedContent(content));
 
             // Удаляем товар со склада
-            var response = await TestClient.DeleteAsync(
-                                                        ApiRoutes.Warehouses.UpdateCountProduct
+            var response = await TestClient.DeleteAsync(ApiRoutes.Warehouses.UpdateCountProduct
                                                                                 .Replace("{warehouseId}", warehouse.Id.ToString())
                                                                                 .Replace("{productId}", createdProduct.Id.ToString()));
 
             response.EnsureSuccessStatusCode();
             response.StatusCode.Should().Be(HttpStatusCode.NoContent);
 
-            response = await TestClient.DeleteAsync(
-                                                        ApiRoutes.Warehouses.UpdateCountProduct
+            response = await TestClient.DeleteAsync(ApiRoutes.Warehouses.UpdateCountProduct
                                                                                 .Replace("{warehouseId}", Guid.NewGuid().ToString())
                                                                                 .Replace("{productId}", createdProduct.Id.ToString()));
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

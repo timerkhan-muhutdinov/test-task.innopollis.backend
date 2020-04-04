@@ -28,16 +28,19 @@ namespace Warehouses.Controllers
         /// <returns></returns>
         [HttpGet]
         [EnableQuery(AllowedQueryOptions = AllowedQueryOptions.Supported, PageSize = 200)]
-        public async Task<IActionResult> Get() => Ok(await _dbContext.Set<Product>().ToListAsync());
+        public async Task<IActionResult> Get() => Ok(await _dbContext.Set<Product>()
+                                                                        .ToListAsync());
 
         /// <summary>
         /// Получение информации о товаре
         /// </summary>
-        /// <param name="key">Ид товара</param>
+        /// <param name="key">Id товара</param>
         /// <returns></returns>
         [HttpGet]
         [EnableQuery]
-        public async Task<IActionResult> Get(Guid key) => Ok(await _dbContext.Set<Product>().Include(p => p.Warehouses).SingleOrDefaultAsync(c => c.Id == key));
+        public async Task<IActionResult> Get(Guid key) => Ok(await _dbContext.Set<Product>()
+                                                                             .Include(p => p.Warehouses)
+                                                                             .SingleOrDefaultAsync(c => c.Id == key));
 
         /// <summary>
         /// Создать товар
@@ -49,7 +52,7 @@ namespace Warehouses.Controllers
         public async Task<IActionResult> Post([FromBody]Product product)
         {
             if (product == null) return BadRequest();
-            if (_dbContext.Set<Product>().Any(x => x.Article == product.Article)) return NotFound();
+            if (_dbContext.Set<Product>().Any(x => x.VendorCode == product.VendorCode)) return BadRequest();
 
             product.Id = Guid.NewGuid();
 
@@ -73,7 +76,7 @@ namespace Warehouses.Controllers
             if (productId != product?.Id) return BadRequest();
 
             if (!_dbContext.Set<Product>().Any(x => x.Id == productId)) return NotFound();
-            if (_dbContext.Set<Product>().Any(x => x.Article == product.Article)) return NotFound();
+            if (_dbContext.Set<Product>().Any(x => x.Id != productId && x.VendorCode == product.VendorCode)) return BadRequest();
 
             _dbContext.Set<Product>().Update(product);
 

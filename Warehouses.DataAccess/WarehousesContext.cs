@@ -18,14 +18,14 @@ namespace Warehouses.DataAccess
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Product>().HasAlternateKey(u => u.Article);
+            modelBuilder.Entity<Product>().HasAlternateKey(u => u.VendorCode);
 
             modelBuilder.Entity<Product>().HasData(
                new Product[]
                {
-                    new Product { Id=Guid.NewGuid(), Name="Ананасы", Article="000001", Description="Банка Ананасов", Price=100},
-                    new Product { Id=Guid.NewGuid(), Name="Абрикосы", Article="000002", Description="Банка Абрикосов", Price=100},
-                    new Product { Id=Guid.NewGuid(), Name="Бананы", Article="000005", Description="Банана", Price=100},
+                    new Product { Id=Guid.NewGuid(), Name="Ананасы", VendorCode="000001", Description="Банка Ананасов", Price=100},
+                    new Product { Id=Guid.NewGuid(), Name="Абрикосы", VendorCode="000002", Description="Банка Абрикосов", Price=100},
+                    new Product { Id=Guid.NewGuid(), Name="Бананы", VendorCode="000005", Description="Банана", Price=100},
                });
 
             modelBuilder.Entity<Warehouse>().HasData(

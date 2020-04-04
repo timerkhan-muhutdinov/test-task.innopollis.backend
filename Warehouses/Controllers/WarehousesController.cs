@@ -33,13 +33,15 @@ namespace Warehouses.Controllers
         /// <returns></returns>
         [HttpGet]
         [EnableQuery]
-        public async Task<IActionResult> Get(Guid key) => Ok(await _dbContext.Set<Warehouse>().Include(p => p.Products).SingleOrDefaultAsync(c => c.Id == key));
+        public async Task<IActionResult> Get(Guid key) => Ok(await _dbContext.Set<Warehouse>()
+                                                                            .Include(p => p.Products)
+                                                                            .SingleOrDefaultAsync(c => c.Id == key));
 
         /// <summary>
         /// Добавление товара на склад
         /// </summary>
-        /// <param name="warehouseId">Ид склада</param>
-        /// <param name="productId">Ид товара</param>
+        /// <param name="warehouseId">Id склада</param>
+        /// <param name="productId">Id товара</param>
         /// <param name="count">Количество товара</param>
         /// <returns></returns>
         [HttpPost]
@@ -47,15 +49,18 @@ namespace Warehouses.Controllers
         [ODataRoute("warehouses({warehouseId})/products({productId})/$ref")]
         public async Task<IActionResult> CreateRef([FromODataUri]Guid warehouseId, [FromODataUri]Guid productId, [FromForm]uint count)
         {
-            var link = await _dbContext.Set<WarehouseProduct>().SingleOrDefaultAsync(f => f.ProductId == productId && f.WarehouseId == warehouseId);
+            var link = await _dbContext.Set<WarehouseProduct>()
+                                            .SingleOrDefaultAsync(f => f.ProductId == productId && f.WarehouseId == warehouseId);
 
             if (link != null) return NoContent();
 
-            var warehouse = await _dbContext.Set<Warehouse>().SingleOrDefaultAsync(p => p.Id == warehouseId);
+            var warehouse = await _dbContext.Set<Warehouse>()
+                                                .SingleOrDefaultAsync(p => p.Id == warehouseId);
 
             if (warehouse == null) return NotFound();
 
-            var product = await _dbContext.Set<Product>().SingleOrDefaultAsync(f => f.Id == productId);
+            var product = await _dbContext.Set<Product>()
+                                            .SingleOrDefaultAsync(f => f.Id == productId);
 
             if (product == null) return NotFound(); 
 
@@ -76,8 +81,8 @@ namespace Warehouses.Controllers
         /// <summary>
         /// Изменение количества товаров на складе
         /// </summary>
-        /// <param name="warehouseId">Ид склада</param>
-        /// <param name="productId">Ид товара</param>
+        /// <param name="warehouseId">Id склада</param>
+        /// <param name="productId">Id товара</param>
         /// <param name="count">Количество товара</param>
         /// <returns></returns>
         [HttpPut]
@@ -85,13 +90,14 @@ namespace Warehouses.Controllers
         [ODataRoute("warehouses({warehouseId})/products({productId})/$ref")]
         public async Task<IActionResult> UpdateRef([FromODataUri]Guid warehouseId, [FromODataUri]Guid productId, [FromForm]uint count)
         {
-            var movie = await _dbContext.Set<WarehouseProduct>().SingleOrDefaultAsync(p => p.ProductId == productId && p.WarehouseId == warehouseId);
+            var product = await _dbContext.Set<WarehouseProduct>()
+                                            .SingleOrDefaultAsync(p => p.ProductId == productId && p.WarehouseId == warehouseId);
 
-            if (movie == null) return NotFound();
+            if (product == null) return NotFound();
 
-            movie.Count = count;
+            product.Count = count;
 
-            _dbContext.Update(movie);
+            _dbContext.Update(product);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
@@ -100,19 +106,20 @@ namespace Warehouses.Controllers
         /// <summary>
         /// Удаление товара со склада
         /// </summary>
-        /// <param name="warehouseId">Ид склада</param>
-        /// <param name="productId">Ид товара</param>
+        /// <param name="warehouseId">Id склада</param>
+        /// <param name="productId">Id товара</param>
         /// <returns></returns>
         [HttpDelete]
         [EnableQuery]
         [ODataRoute("warehouses({warehouseId})/products({productId})/$ref")]
-        public async Task<ActionResult> DeleteRef([FromODataUri] Guid warehouseId, [FromODataUri] Guid productId)
+        public async Task<IActionResult> DeleteRef([FromODataUri] Guid warehouseId, [FromODataUri] Guid productId)
         {
-            var movie = await _dbContext.Set<WarehouseProduct>().SingleOrDefaultAsync(p => p.ProductId == productId && p.WarehouseId == warehouseId);
+            var product = await _dbContext.Set<WarehouseProduct>()
+                                            .SingleOrDefaultAsync(p => p.ProductId == productId && p.WarehouseId == warehouseId);
 
-            if (movie == null) return NotFound();
+            if (product == null) return NotFound();
 
-            _dbContext.Remove(movie);
+            _dbContext.Remove(product);
             await _dbContext.SaveChangesAsync();
 
             return NoContent();
