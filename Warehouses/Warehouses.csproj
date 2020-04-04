@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="7.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Warehouses.DataAccess\Warehouses.DataAccess.csproj" />
+    <ProjectReference Include="..\Warehouses.Domain\Warehouses.Domain.csproj" />
+  </ItemGroup>
+
+
+</Project>
